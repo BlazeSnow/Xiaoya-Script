@@ -6,7 +6,7 @@ endpoint = "https://whut.ai-augmented.com/api/jx-iresource/"
 token = input("请输入 token: ") or os.environ.get("DEV_TOKEN")  # 获取token
 headers = {
     "Authorization": f"Bearer {token}",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
 }
 
 group_id = input("请输入 group_id: ")  # 课程的总ID，在链接的mycourse后面
@@ -28,8 +28,7 @@ for job in course_jobs:  # 遍历课程任务
 
     if job_type == 9:  # 9=视频
         url = f"{endpoint}resource/task/studenFinishInfo?group_id={group_id}&node_id={node_id}"
-        assign_id = requests.get(url=url, headers=headers).json()[
-            "data"]["assign_id"]
+        assign_id = requests.get(url=url, headers=headers).json()["data"]["assign_id"]
 
         url = f"{endpoint}resource/queryResource?node_id={node_id}"
         result = requests.get(url=url, headers=headers).json()["data"]
@@ -43,7 +42,7 @@ for job in course_jobs:  # 遍历课程任务
             "played": duration,
             "media_type": 1,
             "duration": duration,
-            "watched_duration": duration
+            "watched_duration": duration,
         }
         url = f"{endpoint}vod/duration/{quote_id}"  # 提交视频观看时长
         result = requests.post(url=url, headers=headers, json=data)
@@ -53,7 +52,7 @@ for job in course_jobs:  # 遍历课程任务
             "group_id": group_id,
             "media_id": media_id,
             "task_id": task_id,
-            "assign_id": assign_id
+            "assign_id": assign_id,
         }
 
         result = requests.post(url=url, headers=headers, json=data).json()
@@ -63,14 +62,11 @@ for job in course_jobs:  # 遍历课程任务
         task_id = job["task_id"]
 
         url = f"{endpoint}resource/finishActivity"
-        data = {
-            "group_id": group_id,
-            "task_id": task_id,
-            "node_id": node_id
-        }
+        data = {"group_id": group_id, "task_id": task_id, "node_id": node_id}
         result = requests.post(url=url, headers=headers, json=data).json()
         print(f"{green_font}{node_id}{reset_font}: {result}")
 
     else:
         print(
-            f"{red_font}{node_id}{reset_font}: job_type={job_type} Not Implemented, skipped.")
+            f"{red_font}{node_id}{reset_font}: job_type={job_type} Not Implemented, skipped."
+        )
